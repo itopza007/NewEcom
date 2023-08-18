@@ -314,7 +314,7 @@ export default function Home() {
             <div className="relative">
               <TextBox
                 ref={searchVal}
-                placeholder="Search hereeeeeeeeee"
+                placeholder="Search your memory"
                 onFocusIn={() => {
                   navigate("../Search");
                 }}
@@ -369,7 +369,7 @@ export default function Home() {
           </div>
           <InfiniteScroll
             key={uuidv4()}
-            className="grid grid-cols-12 gap-3 border border-solid px-5 pb-0 pt-5  bg-gray-50"
+            className="grid grid-cols-12 gap-3 border border-solid px-2 pb-0 pt-5  bg-gray-50"
             dataLength={Datas.length}
             next={fetchMoreData}
             hasMore={more}
@@ -406,7 +406,7 @@ export default function Home() {
                     <div className="absolute top-0 right-0 left-0 bottom-0 flex w-full h-full">
                       <img
                         alt=""
-                        className=" object-cover w-[inherit] h-[inherit] max-w-[inherit] max-h-[inherit]"
+                        className=" object-cover w-[inherit] h-[170px] max-w-[inherit] max-h-[inherit]"
                         src={item.img_path}
                       />
                     </div>

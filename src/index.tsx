@@ -21,7 +21,7 @@ root.render(
   <React.StrictMode>
     <RecoilRoot>
       <RecoilNexus />
-      <BrowserRouter basename="/PWA">
+      <BrowserRouter basename="/Ecom">
         <App />
       </BrowserRouter>
     </RecoilRoot>

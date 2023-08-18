@@ -93,9 +93,9 @@ export default function Menu_Mobile(props) {
   };
   const btnBack = () => {
     return (
-      <button type="button" className="hover:bg-slate-100 p-2">
+      <button type="button" className="hover:bg-slate-100 pl-5 pr-5 py-4">
         <i
-          className="fal fa-angle-left text-3xl"
+          className="far fa-arrow-left text-xl hover:text-blue-500"
           onClick={() => navigate(-1)}
         ></i>
       </button>
