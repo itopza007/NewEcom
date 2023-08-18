@@ -10,8 +10,9 @@ export function setupPwaUpdateNotifications() {
         if (newWorker) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed') {
-              // Notify the user that an update is available
-              showUpdateNotification(registration);
+              // Get the new version from wherever you store it
+              const newVersion = '1.1.0'; // เปลี่ยนตามเวอร์ชันใหม่ที่มีอยู่
+              showUpdateNotification(registration, newVersion);
             }
           });
         }
@@ -20,20 +21,25 @@ export function setupPwaUpdateNotifications() {
   }
 }
 
-function showUpdateNotification(registration: ServiceWorkerRegistration) {
-  // Use SweetAlert to show a custom notification
+function showUpdateNotification(registration: ServiceWorkerRegistration, newVersion: string) {
   Swal.fire({
     title: 'App Update Available',
-    text: 'A new version of the app is available. Click OK to refresh.',
+    text: `A new version of the app (${newVersion}) is available. Click OK to refresh.`,
     icon: 'info',
     showCancelButton: false,
     confirmButtonColor: '#3085d6',
     confirmButtonText: 'OK'
   }).then((result: { isConfirmed: boolean }) => {
     if (result.isConfirmed) {
-      // Proceed to activate and refresh as needed
-      registration.waiting?.postMessage({ type: 'SKIP_WAITING' }); // Use "waiting" instead of "installing"
+      registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
+
+      // Reload once
       window.location.reload();
+
+      // Reload again
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // รอ 1 วินาทีก่อนเริ่ม reload ครั้งที่สอง
     }
   });
 }
