@@ -26,6 +26,7 @@ export default function Menu_Mobile(props) {
   const [opened, setopened] = useState<boolean>(false);
   const [count, setcount] = useState<number>(0);
   const [nummessage, numsetmessage] = useState(0);
+  
   const toolbarItems = [
     {
       widget: "dxButton",
@@ -52,10 +53,11 @@ export default function Menu_Mobile(props) {
       if (res === "") {
         numsetmessage(0);
       } else {
-        numsetmessage(2);
+        window.addEventListener('message', receiveMessage);
       }
     });
   }, []);
+
   //---------------------function-----------------------------
   const menucilck = (e) => {
     if (e.itemData.id === 1) {
@@ -70,16 +72,30 @@ export default function Menu_Mobile(props) {
     }
   };
 
+  const receiveMessage = (event: any) => {
+    if (event.data === 'addMessage') {
+      numsetmessage(prevNum => prevNum + 1);
+    }
+    console.log(event.data);
+  }
+  const messageClick = () => {
+    numsetmessage(0)
+    // console.log('getClick')
+    window.parent.postMessage('getClick');
+  }
+
   const btnMenu = () => {
     return (
       <div className="grid grid-cols-2 ">
         <div className="grid col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2 content-center px-5 py-2 ">
-          <button className="relative border rounded-full w-10 h-10">
+          <button className="relative border rounded-full w-10 h-10"
+          onClick={() => messageClick()}
+          >
             <i className="relative far fa-comments text-xl"></i>
 
             <span
               className={
-                nummessage != 0
+                nummessage !== 0
                   ? "absolute bottom-5 left-5  text-[13px] inline-block py-1 px-1 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#FF4A4A] text-white rounded-full w-[22px]"
                   : "absolute invisible "
               }
