@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next";
 import List from "devextreme-react/list.js";
 import Drawer from "devextreme-react/drawer";
 import Toolbar, { Item } from "devextreme-react/toolbar";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userdata, UserState } from "../../Recoil/MainRecoil";
 import { ReactComponent as UpimgIcon } from "../../image/SVG_Memorybox/Home instruction/Symbol.svg";
 import { ReactComponent as Icon_grey } from "../../image/SVG_Memorybox/Navbar Top/Nav icon_grey.svg";
 import Auth from "../../MainCall/Auth";
-
+import { countchat } from "../../Recoil/ChatRecoil";
 import MenuBottom from "./MenuBottom";
 import { GetdataAPI, timeout } from "../../MainCall/MainCall";
 export default function Menu_Mobile(props) {
@@ -25,7 +25,7 @@ export default function Menu_Mobile(props) {
   const { pageshow, Title } = props;
   const [opened, setopened] = useState<boolean>(false);
   const [count, setcount] = useState<number>(0);
-  const [nummessage, numsetmessage] = useState(0);
+  const [nummessage, numsetmessage] = useRecoilState(countchat)
   
   const toolbarItems = [
     {

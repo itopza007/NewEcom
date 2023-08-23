@@ -314,7 +314,7 @@ export default function Home() {
             <div className="relative">
               <TextBox
                 ref={searchVal}
-                placeholder="Search your memory"
+                placeholder="Search your memory here..."
                 onFocusIn={() => {
                   navigate("../Search");
                 }}
