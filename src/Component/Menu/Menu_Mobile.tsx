@@ -25,7 +25,15 @@ export default function Menu_Mobile(props) {
   const { pageshow, Title } = props;
   const [opened, setopened] = useState<boolean>(false);
   const [count, setcount] = useState<number>(0);
+<<<<<<< Updated upstream
   const [nummessage, numsetmessage] = useState(0);
+=======
+  const [nummessage, numsetmessage] = useState(() => {
+    const storedNumMessage = sessionStorage.getItem('nummessage');
+    return storedNumMessage ? parseInt(storedNumMessage) : 0;
+  });
+  
+>>>>>>> Stashed changes
   const toolbarItems = [
     {
       widget: "dxButton",
@@ -56,6 +64,14 @@ export default function Menu_Mobile(props) {
       }
     });
   }, []);
+<<<<<<< Updated upstream
+=======
+
+  useEffect(() => {
+    sessionStorage.setItem('nummessage', nummessage.toString());
+  }, [nummessage]);
+
+>>>>>>> Stashed changes
   //---------------------function-----------------------------
   const menucilck = (e) => {
     if (e.itemData.id === 1) {
