@@ -100,6 +100,15 @@ export default function Menu_PC(prop) {
       </button>
     );
   };
+  const ChatItem = () => {
+    return (
+      <button type="button" className="hover:bg-slate-100">
+        <div className="px-8" onClick={() => navigate("/Main/Chat")}>
+          Chat
+        </div>
+      </button>
+    );
+  };
   const LoginItem = () => {
     return (
       <button
@@ -124,6 +133,7 @@ export default function Menu_PC(prop) {
         <Item location="center" render={AboutItem} />
         <Item location="center" render={TechItem} />
         <Item location="center" render={PriceItem} />
+        <Item location="center" render={ChatItem} />
         <Item location="center" render={LoginItem} />
       </Toolbar>
       <Drawer

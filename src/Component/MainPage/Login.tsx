@@ -123,6 +123,7 @@ export default function Login(props) {
       }
     });
   };
+  
   const AddLine_WITH_Redirect = (UserLineId, uri) => {
     GetdataAPI_Outside("/api/Main/CheckUserLineId", {
       User_line_userid: UserLineId,

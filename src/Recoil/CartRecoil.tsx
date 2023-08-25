@@ -3,6 +3,7 @@ export interface data {
   cate: number;
   img: string;
 }
+
 export const countcart = atom<number>({
   key: "countcart",
   default: 0,
@@ -12,6 +13,7 @@ export const count = atom<number>({
   key: "count",
   default: 0,
 });
+
 export const FindIMG = atom<data>({
   key: "FindIMG",
   default: {
@@ -19,6 +21,7 @@ export const FindIMG = atom<data>({
     img: "",
   },
 });
+
 export const cart_data = atom<any>({
   key: "cart_data",
   default: [],

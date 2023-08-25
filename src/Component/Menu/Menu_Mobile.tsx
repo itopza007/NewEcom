@@ -78,6 +78,11 @@ export default function Menu_Mobile(props) {
     }
     console.log(event.data);
   }
+
+  const checkBrowser = () => {
+
+  }
+
   const messageClick = () => {
     numsetmessage(0)
     // console.log('getClick')
