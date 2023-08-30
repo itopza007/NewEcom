@@ -26,7 +26,7 @@ export default function Menu_Mobile(props) {
   const [opened, setopened] = useState<boolean>(false);
   const [count, setcount] = useState<number>(0);
   const [nummessage, numsetmessage] = useRecoilState(countchat)
-  
+
   const toolbarItems = [
     {
       widget: "dxButton",
@@ -69,6 +69,7 @@ export default function Menu_Mobile(props) {
     } else if (e.itemData.id === 6) {
       Auth.LogOut();
       onOutsideClick();
+      window.parent.postMessage('AppLogout');
     }
   };
 
@@ -89,12 +90,15 @@ export default function Menu_Mobile(props) {
     window.parent.postMessage('getClick');
   }
 
+
+
   const btnMenu = () => {
     return (
       <div className="grid grid-cols-2 ">
+
         <div className="grid col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2 content-center px-5 py-2 ">
           <button className="relative border rounded-full w-10 h-10"
-          onClick={() => messageClick()}
+            onClick={() => messageClick()}
           >
             <i className="relative far fa-comments text-xl"></i>
 

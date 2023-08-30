@@ -57,17 +57,25 @@ export default function Menu_PC(prop) {
       });
     }
   };
-  const LogInorLogOut = () => {
+  
+const LogInorLogOut = () => {
+    const uri = window.location.href;
     if (txtLogin === "LogOut") {
       settxtLogin("LogIn");
       setnumcount(0);
       Auth.LogOut();
-      navigate("/");
+
+      navigate("/Authen", {
+        state: {
+          uri: uri,
+        },
+      });
     } else {
       settxtLogin("LogOut");
       navigate("/Main");
     }
   };
+
   const MenuItem = () => {
     return (
       <button type="button" className="">

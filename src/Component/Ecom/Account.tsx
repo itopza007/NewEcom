@@ -115,6 +115,8 @@ export default function Account() {
   const Logout = () => {
     setnumcount(0);
     Auth.LogOut();
+    window.parent.postMessage('AppLogout');
+    console.log('dddddd')
     navigate("/");
   };
   //------------------------------------------- html ------------------------------------------

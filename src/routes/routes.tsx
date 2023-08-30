@@ -3,8 +3,6 @@ import { isBrowser } from "react-device-detect";
 import { Navigate, useRoutes } from "react-router-dom";
 import MainHomeMobile from "../Component/MainPage/MainHomeMobile";
 import LineLoad from "../Component/MainPage/LineLoad";
-import Chat from "../Component/Chat/Chat";
-import MainChat from "../Component/Chat/MainChat";
 
 const Menu_pay = React.lazy(() => import("../Component/Menu/Menu_pay"));
 const MainHome = React.lazy(() => import("../Component/MainPage/MainHome"));
@@ -423,19 +421,11 @@ export default function Router() {
           ),
         },
 
-        {
-          path: "Chat",
-          element: isBrowser ? (
-            <Menu_PC pageshow={<MainChat/>} />
-          ) : (
-            <Menu_Mobile pageshow={<MainChat />} />
-          ),
-        },
-
         { path: "404", element: <Page404 /> },
         { path: "*", element: <Navigate to="/404" /> },
       ],
     },
+
     { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }

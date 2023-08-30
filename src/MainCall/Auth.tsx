@@ -35,7 +35,7 @@ const Login = async (Authenticate: string, user: string, pass: string) => {
         {
           withCredentials: true,
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Content-Type": "application/json",
             Authenticate: Authenticate,
           },
         }
