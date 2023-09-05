@@ -3,9 +3,16 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import { NewMessages } from "../../Models/NewMessages";
+import { User } from "../../Models/Users";
 
-function MessageContainer({ messages }: any) {
+function MessageContainer({
+  messages,
+  userSelect,
+}: {
+  messages: NewMessages[];
+  userSelect: User;
+}) {
   const messageRef = useRef<any>();
 
   useEffect(() => {
@@ -23,20 +30,22 @@ function MessageContainer({ messages }: any) {
     <List
       ref={messageRef}
       sx={{
-        height: "77vh",
+        height: "73vh",
         overflowY: "auto",
       }}
     >
       <Grid container>
-        {messages.map((m: any, index: any) => (
+        {messages[0].Message.map((m, index) => (
           <ListItem key={index}>
             <Grid item xs={12}>
               <ListItemText
                 style={
-                  m.cur === 0 ? { textAlign: "left" } : { textAlign: "end" }
+                  m.Author === userSelect.userName
+                    ? { textAlign: "left" }
+                    : { textAlign: "end" }
                 }
-                primary={m.message}
-                secondary={"-- " + m.user}
+                primary={m.NewMessage}
+                secondary={"-- " + m.Author}
               />
             </Grid>
           </ListItem>

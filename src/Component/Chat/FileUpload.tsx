@@ -16,7 +16,7 @@ import LinearProgress, {
   LinearProgressProps,
 } from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
-import { DataFile } from "./MainChat";
+import { DataFile } from "./Mainchat";
 import { CancelTokenSource } from "axios";
 
 function FileUpload({

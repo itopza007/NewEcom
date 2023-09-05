@@ -7,14 +7,19 @@ import IconButton from "@mui/material/IconButton";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 
-function SendMessageForm({ semdMessage, handleSelectFiles, inputRef }: any) {
-  const [message, setMessage] = useState<string>();
+function SendMessageForm({ SendMessage }: { SendMessage: (message: string) => void }) {
+  const [message, setMessage] = useState<string>("");
 
   const SubmitMessage = (e: any) => {
     e.preventDefault();
-    semdMessage(message);
+    SendMessage(message);
     setMessage("");
   };
+
+  const handleInputMessageChang = (even: any) => {
+    // console.log(even);
+    setMessage(even.target.value)
+  }
 
   return (
     <Grid container spacing={1} style={{ padding: "20px" }}>
@@ -27,24 +32,14 @@ function SendMessageForm({ semdMessage, handleSelectFiles, inputRef }: any) {
           width: "100%",
         }}
       >
-        <IconButton sx={{ p: "10px" }} component="label">
-          <AttachFileIcon />
-          <input
-            hidden
-            accept="image/*,"
-            multiple
-            type="file"
-            ref={inputRef}
-            onChange={handleSelectFiles}
-          />
-        </IconButton>
         <InputBase
           sx={{ ml: 1, flex: 1 }}
           placeholder="Type Something"
           id="txtmessage"
           type="text"
-          onChange={(e: any) => setMessage(e.target.value)}
+          onChange={handleInputMessageChang}
           value={message}
+
           autoComplete="off"
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />

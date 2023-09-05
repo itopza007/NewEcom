@@ -10,9 +10,9 @@ export function setupPwaUpdateNotifications() {
         if (newWorker) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed') {
-              // Get the new version from wherever you store it
-              const newVersion = '1.1.0'; // เปลี่ยนตามเวอร์ชันใหม่ที่มีอยู่
-              showUpdateNotification(registration, newVersion);
+              const newVersion = '1.1.1';
+              showUpdateNotification(registration, newVersion); 
+              window.addEventListener('message', receiveMessage);    
             }
           });
         }
@@ -43,3 +43,8 @@ function showUpdateNotification(registration: ServiceWorkerRegistration, newVers
     }
   });
 }
+
+function receiveMessage() {
+  window.parent.postMessage('AppUpdate');
+}
+

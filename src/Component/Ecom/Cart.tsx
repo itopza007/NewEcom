@@ -482,7 +482,7 @@ function Grid_unitselect(props) {
       let itemID = SListItem.filter(
         (e) => e.unitid === untId && e.slist_option_id === optId
       );
-
+      
       GetdataAPI("/api/MainSale/UpdateItemToCart", {
         cart_id: cart_id,
         item_id: itemID[0].item_id,

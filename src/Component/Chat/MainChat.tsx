@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useRef, useState } from "react";
-import Lobby from "./Lobby";
+import Lobby from "../../page/Lobby";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import {
@@ -7,9 +7,11 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
-import Chat from "./Chat";
+import Dashboard from "../../page/Dashboard";
 import axios, { AxiosProgressEvent, CancelTokenSource } from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { User } from "../../Models/Users";
+import { NewMessages } from "../../Models/NewMessages";
 
 export interface DataFile {
   [id: string]: {
@@ -22,51 +24,90 @@ export interface DataFile {
   };
 }
 
-function MainChat() {
-  const [connection, setConnection] = useState<HubConnection | null>();
-  const [messages, setMessages] = useState<any>([]);
-  const [users, setUsers] = useState<any>([]);
+function Mainchat() {
+  const [connection, setConnection] = useState<HubConnection | null>(null);
   const [files, setFiles] = useState<DataFile[]>([]);
-  const inputRef = useRef<any>(null);
+  const [messages, setMessages] = useState<NewMessages[]>([]);
+  const [me, setMe] = useState<User>({ connectionId: "", userName: "" });
 
-  const joinRoom = async (user: string, room: string) => {
+  const joinRoom = async (user: string) => {
     try {
       const connection: HubConnection = new HubConnectionBuilder()
-        // .withUrl("http://localhost:5101/chat")
-        .withUrl("http://sev1.bsv-th-authorities.com/hub/chat")
+        .withUrl("https://www.bsv-th-authorities.com/ChatAPI/chat")
+        // .withUrl("http://Fsev1.bsv-th-authorities.com/ChatAPI/chat")
         .configureLogging(LogLevel.Information)
         .build();
 
-      connection.on("UsersInRoom", (user) => {
-        setUsers(user);
+      connection.on("NewOnlineUser", (user) => {
+        console.log(user);
+        setMe(user);
+      });
+
+      connection.onclose((e) => {
+        setMessages([]);
+        setConnection(null);
+      });
+
+      connection.on("UserDisconnection", (userID) => {
+        //Remove Chat Hisory in Other client  state
+        setMessages((prevState) => {
+          return prevState.filter((m) => m.User.connectionId !== userID);
+        });
+      });
+
+      connection.on("OnlineUsers", (AllUser: any) => {
+        console.log(AllUser);
       });
 
       connection.on(
         "ReceiveMessage",
-        (user: string, message: string, cur: string, type: string) => {
+        (message: string, userInfoSender: User) => {
           console.log("message received: ", message);
-          if (connection.connectionId !== cur || type === "img") {
-            setMessages((messages: any) => [
-              ...messages,
-              {
-                user,
-                message,
-                cur: type === "img" && connection.connectionId === cur ? 1 : 0,
-              },
-            ]);
-          }
+          console.log(userInfoSender);
+
+          setMessages((prevState) => {
+            let msg = prevState.find(
+              (m) => m.User.connectionId === userInfoSender.connectionId
+            );
+
+            if (!!msg) {
+              return prevState.map((m) => {
+                if (m.User.connectionId === userInfoSender.connectionId) {
+                  return {
+                    ...m,
+                    Message: [
+                      ...m.Message,
+                      {
+                        Author: userInfoSender.userName,
+                        NewMessage: message,
+                      },
+                    ],
+                  };
+                } else {
+                  return m;
+                }
+              });
+            } else {
+              return [
+                ...prevState,
+                {
+                  User: userInfoSender,
+                  Message: [
+                    {
+                      Author: userInfoSender.userName,
+                      NewMessage: message,
+                    },
+                  ],
+                },
+              ];
+            }
+          });
         }
       );
 
-      connection.onclose((e) => {
-        setConnection(null);
-        setMessages([]);
-        setUsers([]);
-      });
-
       await connection.start();
 
-      await connection.invoke("joinRoom", { "User": "Golf", "Room": "Room 1" });
+      await connection.invoke("joinRoom", {'User': user});
       console.log(connection);
       setConnection(connection);
     } catch (error) {
@@ -82,13 +123,52 @@ function MainChat() {
     }
   };
 
-  const sendMessage = async (message: any) => {
+  const sendMessage = async (message: string, receiverName: User) => {
     try {
-      await connection?.invoke("SendMessage", message);
-      setMessages((messages: any) => [
-        ...messages,
-        { user: "", message, cur: 1 },
-      ]);
+      console.log(messages);
+
+      setMessages((prevState) => {
+        let msg = prevState.find(
+          (m) => m.User?.connectionId === receiverName.connectionId
+        );
+        if (!!msg) {
+          return prevState.map((m) => {
+            if (m.User?.connectionId === receiverName.connectionId) {
+              return {
+                ...m,
+                Message: [
+                  ...m.Message,
+                  {
+                    Author: me.userName,
+                    NewMessage: message,
+                  },
+                ],
+              };
+            } else {
+              return m;
+            }
+          });
+        } else {
+          return [
+            ...prevState,
+            {
+              User: receiverName,
+              Message: [
+                {
+                  Author: me.userName,
+                  NewMessage: message,
+                },
+              ],
+            },
+          ];
+        }
+      });
+
+      await connection?.invoke(
+        "SendMessageDM",
+        message,
+        receiverName.connectionId
+      );
     } catch (error) {
       console.log(error);
     }
@@ -102,38 +182,39 @@ function MainChat() {
 
     let TempFile: DataFile[] = files;
     TempFile[index][id].status = 1; //changStatus
-    try {
+    const res = await axios
       // http://localhost:5101/api/Upload
-      // http://sev1.bsv-th-authorities.com/hub/api/Upload
-      const res = await axios.post("http://localhost:5101/api/Upload", formData, {
+      // http://sev1.bsv-th-authorities.com/ChatAPI/api/Upload
+      .post("https://www.bsv-th-authorities.com/ChatAPI/api/Upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         cancelToken: cancelToken.token,
-        onUploadProgress(progressEvent) {
+        onUploadProgress(progressEvent: AxiosProgressEvent) {
           if (progressEvent?.progress && progressEvent?.total) {
-            let percen = Math.round((100 * progressEvent.progress) / progressEvent.total);
-  
+            let percen = Math.round(100 * progressEvent.progress);
+
             TempFile[index][id].progress = percen;
             TempFile[index][id].estimated = progressEvent.estimated || 0;
             setFiles([...TempFile]);
           }
         },
+      })
+      .catch((error) => {
+        if (axios.isCancel(error)) {
+          // Do something when user cancel upload
+          TempFile[index][id].status = 2;
+          setFiles([...TempFile]);
+          console.log(error.message);
+        }
       });
-  
-      if (res?.status === 200) {
-        TempFile[index][id].status = 3;
-        setFiles([...TempFile]);
-      }
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        // Do something when user cancels upload
-        TempFile[index][id].status = 2;
-        setFiles([...TempFile]);
-        console.log(error.message);
-      }
-    }
+
+    // if (res?.status === 200) {
+    //   TempFile[index][id].status = 3;
+    //   setFiles([...TempFile]);
+    // }
   };
+
 
   const handleSelectFiles = (e: ChangeEvent<HTMLInputElement>) => {
     const file: FileList | null = e.currentTarget.files;
@@ -173,20 +254,27 @@ function MainChat() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="md">
+      <Container maxWidth={!connection ? "sm" : "xl"}>
         {!connection ? (
           <Lobby joinRoom={joinRoom} />
         ) : (
-          <Chat
-            messages={messages}
-            sendMessage={sendMessage}
+          // <Chat
+          //   messages={messages}
+          //   sendMessage={sendMessage}
+          //   closeConnection={closeConnection}
+          //   users={users}
+          //   handleUpload={handleUpload}
+          //   files={files}
+          //   handleSelectFiles={handleSelectFiles}
+          //   handleRemoveFile={handleRemoveFile}
+          //   inputRef={inputRef}
+          // />
+          <Dashboard
+            Me={me}
             closeConnection={closeConnection}
-            users={users}
-            handleUpload={handleUpload}
-            files={files}
-            handleSelectFiles={handleSelectFiles}
-            handleRemoveFile={handleRemoveFile}
-            inputRef={inputRef}
+            connection={connection}
+            sendMessage={sendMessage}
+            messages={messages}
           />
         )}
       </Container>
@@ -194,4 +282,4 @@ function MainChat() {
   );
 }
 
-export default MainChat;
+export default Mainchat;

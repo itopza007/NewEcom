@@ -4,8 +4,6 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import ConnectedUsers from "./ConnectedUsers";
-import MessageContainer from "./MessageContainer";
-import SendMessageForm from "./SendMessageForm";
 import { Divider } from "@mui/material";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
@@ -95,18 +93,18 @@ function Chat({
           <ConnectedUsers users={users} />
         </Grid>
         <Grid item xs={12} sm={9}>
-          <MessageContainer messages={messages} />
+          {/* <MessageContainer messages={messages} /> */}
           <Divider />
           <FileUpload
             files={files}
             handleRemoveFile={handleRemoveFile}
             handleUpload={handleUpload}
           />
-          <SendMessageForm
+          {/* <SendMessageForm
             semdMessage={sendMessage}
             handleSelectFiles={handleSelectFiles}
             inputRef={inputRef}
-          />
+          /> */}
         </Grid>
       </Grid>
     </React.Fragment>
