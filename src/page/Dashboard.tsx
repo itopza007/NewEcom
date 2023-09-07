@@ -77,7 +77,7 @@ function Dashboard({
   const getUsers = useCallback(async () => {
     const Users = await fetch(
       // "http://sev1.bsv-th-authorities.com/ChatAPI/api/Showroom",
-      `https://www.bsv-th-authorities.com/ChatAPI/api/allusers/${connection.connectionId}`,
+      `https://www.bsv-th-authorities.com/hub-api/api/allusers/${connection.connectionId}`,
       {
         method: "GET",
         headers: {
@@ -93,7 +93,7 @@ function Dashboard({
   const getGroups = useCallback(async () => {
     const groups = await fetch(
       // "http://sev1.bsv-th-authorities.com/ChatAPI/api/Showroom",
-      `https://www.bsv-th-authorities.com/ChatAPI/api/allgroups`,
+      `https://www.bsv-th-authorities.com/hub-api/api/allgroups`,
       {
         method: "GET",
         headers: {
@@ -115,7 +115,7 @@ function Dashboard({
   };
 
   const handleCreateGroups = async () => {
-    let groupID = await fetch(`https://www.bsv-th-authorities.com/ChatAPI/api/groups`, {
+    let groupID = await fetch(`https://www.bsv-th-authorities.com/hub-api/api/groups`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

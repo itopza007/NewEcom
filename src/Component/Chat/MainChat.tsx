@@ -33,7 +33,7 @@ function Mainchat() {
   const joinRoom = async (user: string) => {
     try {
       const connection: HubConnection = new HubConnectionBuilder()
-        .withUrl("https://www.bsv-th-authorities.com/ChatAPI/chat")
+        .withUrl("https://www.bsv-th-authorities.com/hub-api/chat")
         // .withUrl("http://Fsev1.bsv-th-authorities.com/ChatAPI/chat")
         .configureLogging(LogLevel.Information)
         .build();
@@ -107,7 +107,7 @@ function Mainchat() {
 
       await connection.start();
 
-      await connection.invoke("joinRoom", {'User': user});
+      await connection.invoke("joinRoom", user);
       console.log(connection);
       setConnection(connection);
     } catch (error) {
@@ -185,7 +185,7 @@ function Mainchat() {
     const res = await axios
       // http://localhost:5101/api/Upload
       // http://sev1.bsv-th-authorities.com/ChatAPI/api/Upload
-      .post("https://www.bsv-th-authorities.com/ChatAPI/api/Upload", formData, {
+      .post("https://www.bsv-th-authorities.com/hub-api/api/Upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

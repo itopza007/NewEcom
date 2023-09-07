@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 interface LocationState {
   email: string;
 }
+
 export default function ChangeEmailpath2() {
   //------------------------------------------- useRef ------------------------------------------
   const email = useRef(null);

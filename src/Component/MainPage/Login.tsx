@@ -52,6 +52,7 @@ export default function Login(props) {
 
   useEffect(() => {
     checkLineAppOpen();
+    console.log(URL)
   }, []);
 
   const test = [

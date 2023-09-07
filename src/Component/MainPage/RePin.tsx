@@ -28,6 +28,8 @@ export default function RePin(props) {
       Auth.RefreshDataUser();
     }
   };
+
+
   return (
     <>
       <PopupSuccess data={toggle} toggle={togglePopup} done={done} />
